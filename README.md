@@ -125,34 +125,6 @@ Va: 230.0 V    Ia: 10.5 A
 Vb: 195.0 V    Ib: 18.0 A
 Vc: 230.0 V    Ic: 10.5 A
 
-Expected Result: Phase B FAULT ⚠️
-📁 Project Structure
-power-fault-detection/
-│
-├── django_project/              # Web application
-│   ├── manage.py
-│   ├── fault_app/
-│   │   ├── models.py           # Database models
-│   │   ├── views.py            # Request handlers
-│   │   ├── urls.py             # URL routing
-│   │   ├── forms.py            # Input forms
-│   │   └── templates/
-│   │       ├── home.html       # Landing page
-│   │       ├── predict.html    # Input form
-│   │       └── results.html    # Results display
-│   └── settings.py
-|
-│
-└── README.md   
-
-
-
-📁
-├── ai_module/             # ML service
-│   ├── main.py                 # API endpoints
-│   ├── decision_tree_model.joblib  # Trained model
-│   └── scaler.joblib           # Feature scaler                 # This file
-🔌 API Reference
 The FastAPI service provides a REST endpoint for predictions:
 Endpoint: POST /predict
 Request:
