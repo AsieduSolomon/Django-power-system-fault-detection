@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Result</title>
+    <style>
+        body { font-family: Arial; text-align: center; margin: 40px; background: #f4f6f9; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .fault { color: red; font-size: 1.4em; }
+        .normal { color: green; font-size: 1.4em; }
+        a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Fault Detection Result</h1>
+        <h3>Record ID: #{{ id }}</h3>
+        <hr>
+
+        <h2>Input Values</h2>
+        <p>Va: <strong>{{ input.Va|floatformat:3 }}</strong> V</p>
+        <p>Vb: <strong>{{ input.Vb|floatformat:3 }}</strong> V</p>
+        <p>Vc: <strong>{{ input.Vc|floatformat:3 }}</strong> V</p>
+        <p>Ia: <strong>{{ input.Ia|floatformat:3 }}</strong> A</p>
+        <p>Ib: <strong>{{ input.Ib|floatformat:3 }}</strong> A</p>
+        <p>Ic: <strong>{{ input.Ic|floatformat:3 }}</strong> A</p>
+
+        <h2>Prediction Results</h2>
+        <p>Ground Fault (G): <strong class="{% if G == 1 %}fault{% else %}normal{% endif %}">
+            {% if G == 1 %}FAULT DETECTED{% else %}No Fault{% endif %}
+        </strong></p>
+        <p>Phase A: <strong class="{% if A == 1 %}fault{% else %}normal{% endif %}">
+            {% if A == 1 %}FAULT{% else %}Normal{% endif %}
+        </strong></p>
+        <p>Phase B: <strong class="{% if B == 1 %}fault{% else %}normal{% endif %}">
+            {% if B == 1 %}FAULT{% else %}Normal{% endif %}
+        </strong></p>
+        <p>Phase C: <strong class="{% if C == 1 %}fault{% else %}normal{% endif %}">
+            {% if C == 1 %}FAULT{% else %}Normal{% endif %}
+        </strong></p>
+
+        <br><br>
+        <a href="{% url 'predict' %}">← New Prediction</a> | 
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power System Fault Analysis | Predictive Diagnostics</title>
+    <style>
+        :root {
+            --primary-blue: #1a56db;
+            --secondary-blue: #3b82f6;
+            --light-blue: #eff6ff;
+            --dark-blue: #1e3a8a;
+            --gray-light: #f8fafc;
+            --gray-medium: #64748b;
+            --gray-dark: #334155;
+            --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f1f5f9;
+            color: var(--gray-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .info-card {
+            background-color: var(--light-blue);
+            border-left: 4px solid var(--secondary-blue);
+            padding: 24px;
+            border-radius: var(--border-radius);
+            margin-bottom: 36px;
+        }
+
+        .info-card h3 {
+            color: var(--dark-blue);
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card p {
+            color: var(--gray-dark);
+            line-height: 1.6;
+        }
+
+        form {
+            display: grid;
+            gap: 36px;
+        }
+
+        .section-title {
+            color: var(--dark-blue);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .form-field {
+            position: relative;
+        }
+
+        .form-field label {
+            display: block;
+            color: var(--dark-blue);
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .form-field input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-field input:focus {
+            outline: none;
+            border-color: var(--secondary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .form-field .unit {
+            position: absolute;
+            right: 16px;
+            top: 42px;
+            color: var(--gray-medium);
+            font-weight: 500;
+            pointer-events: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-start;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            box-shadow: 0 2px 6px rgba(26, 86, 219, 0.25);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--gray-dark);
+            border: 1.5px solid #cbd5e1;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f8fafc;
+            border-color: var(--gray-medium);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: var(--primary-blue);
+            font-size: 1rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid var(--primary-blue);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--gray-medium);
+            background: var(--gray-light);
+            font-size: 0.9rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Power System Fault Analysis</h1>
+            <p>Advanced predictive diagnostics for electrical power systems</p>
+        </div>
+
+        <div class="content">
+            <div class="info-card">
+                <h3>Analysis Instructions</h3>
+                <p>Enter voltage (V) and current (A) measurements for all three phases. Our system will analyze the data to detect potential faults in Phase A, B, C, or ground connections.</p>
+            </div>
+
+            <form method="post" id="predictionForm">
+                {% csrf_token %}
+                
+                <div>
+                    <div class="section-title">
+                        Voltage Measurements
+                    </div>
+                    <div class="input-group">
+                        <div class="form-field">
+                            <label for="Va">Phase A Voltage</label>
+                            <input type="number" step="0.01" name="Va" id="Va" required placeholder="Enter value">
+                            <span class="unit">V</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="Vb">Phase B Voltage</label>
+                            <input type="number" step="0.01" name="Vb" id="Vb" required placeholder="Enter value">
+                            <span class="unit">V</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="Vc">Phase C Voltage</label>
+                            <input type="number" step="0.01" name="Vc" id="Vc" required placeholder="Enter value">
+                            <span class="unit">V</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-title">
+                        Current Measurements
+                    </div>
+                    <div class="input-group">
+                        <div class="form-field">
+                            <label for="Ia">Phase A Current</label>
+                            <input type="number" step="0.01" name="Ia" id="Ia" required placeholder="Enter value">
+                            <span class="unit">A</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="Ib">Phase B Current</label>
+                            <input type="number" step="0.01" name="Ib" id="Ib" required placeholder="Enter value">
+                            <span class="unit">A</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="Ic">Phase C Current</label>
+                            <input type="number" step="0.01" name="Ic" id="Ic" required placeholder="Enter value">
+                            <span class="unit">A</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing power system data...</p>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">
+                        Analyze & Predict Faults
+                    </button>
+                    <a href="{% url 'home' %}" class="btn btn-secondary">
+                        Back to Home
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <footer>
+            Power System Fault Detection &copy; 2025
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function() {
+            document.getElementById('loading').classList.add('active');
+            document.querySelector('.btn-primary').disabled = true;
+        });
+    </script>
+</body>
+</html>
